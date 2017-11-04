@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+$:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib')))
+
+require 'bork'
+
+puts Bork.constants
+puts Bork::VERSION
+puts Bork::Parser.inspect
+puts "butt"
+
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: example.rb [options]"
+
+  opts.on("-v", "--[no-]verbose", "Run verbosely") do |value|
+    options[:verbose] = value
+  end
+
+  # opts.on("-t", "--timeout", "Set test file timeout in seconds [Default #{Testy::DEFAULT_OPTIONS[:timeout]}]") do |value|
+  #   options[:timeout] = value
+  # end
+end.parse!
+
+puts "FLAGS: " + options.inspect
+
+options.tap do |opts|
+  # capture additional arguements into options hash
+  # opts[:example] = ARGV
+end
+
+puts "OPTS: " + options.inspect
+
+console = Bork::Console.new(options)
+console.start
+
+puts "ALL DONE, EXITING!"
