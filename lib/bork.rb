@@ -39,5 +39,7 @@ module Bork
   # used as a pry replacement - pry has some issues with the Timeout class
   autoload :REPL, 'bork/repl'
 
-  autoload :Commands, 'bork/commands'
+  # Contains commands accessible in the bork shell, serves as an execution
+  #   context, the "self" of a console session.
+  autoload :Context, 'bork/context'
 end

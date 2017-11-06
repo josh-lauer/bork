@@ -3,13 +3,14 @@ require 'pathname'
 
 module Bork
   class Console
-    attr_reader :options
+    attr_reader :options, :context
 
     # @option options [String] scope (Dir.pwd) The folder which will serve as
     #   the 'root' for this console session. Only tests within this directory
     #   will be tracked and run.
     def initialize(_options = {})
       @options = OpenStruct.new(_options)
+      @context = Context.new
       puts "Bork::Console OPTIONS: #{options.inspect}"
     end
 
@@ -26,7 +27,7 @@ module Bork
         puts "Starting session..."
         puts "Hint: call 'help'"
         # REPL.start(binding)
-        REPL.start(Bork::Commands.command_binding)
+        REPL.start(context.binding)
       end
     end
 
