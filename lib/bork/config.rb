@@ -24,6 +24,7 @@ module Bork
       def defaults
         {
           timeout: 30*60,  # half an hour per file max
+          echo: false      # test output displayed
         }
       end
     end

@@ -6,6 +6,7 @@ module Bork
 
   # Represents a single test file.
   # - has a Runner
+  # - has a Status.
   autoload :Test, 'bork/test'
 
   # An attempt to run a collection of Tests.
@@ -17,8 +18,8 @@ module Bork
   # - builds a Session
   autoload :Loader, 'bork/loader'
 
-  # A Test's output. Like a logger, sort of.
-  autoload :Log, 'bork/log'
+  # # A Test's output. Like a logger, sort of. (not sure if needed)
+  # autoload :Log, 'bork/log'
 
   # Parses a Log and returns a Status. For now just parses Test:::Unit output.
   # - consumes a Log to produce a Status
@@ -27,9 +28,7 @@ module Bork
   # A Test's result. Has a state such as 'passing', 'failing', or 'errored'.
   autoload :Status, 'bork/status'
 
-  # Takes a Test and runs it, creating a Log and a Status.
-  # - has a Log.
-  # - has a Status.
+  # Takes a Test and runs it, creating artifacts in the job folder for this test.
   autoload :Runner, 'bork/runner'
 
   # Creates an interactive session.
@@ -37,6 +36,8 @@ module Bork
   # - starts a REPL
   autoload :Console, 'bork/console'
 
-  # used as a pry replacement
+  # used as a pry replacement - pry has some issues with the Timeout class
   autoload :REPL, 'bork/repl'
+
+  autoload :Commands, 'bork/commands'
 end

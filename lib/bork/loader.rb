@@ -2,16 +2,15 @@ require "pathname"
 
 module Bork
   class Loader
-    attr_accessor :targets, :test_files
+    attr_accessor :scope, :test_files
 
-    def initialize(*_targets)
-      self.targets = [*_targets].flatten.compact
-      self.targets << Dir.pwd if targets.empty?
+    def initialize(scope)
+      self.scope = scope
       reload!
     end
 
     def reload!
-      puts "LOADING TARGETS: #{targets}"
+      puts "LOADING SCOPE: #{scope}"
       @test_files = []
       @tests = nil
       @rvm_contexts = nil
@@ -22,10 +21,8 @@ module Bork
     # private
 
     def load_test_files
-      targets.each do |target|
-        puts "LOADING TARGET: #{target.inspect}"
-        load_file_or_directory(target)
-      end
+      puts "LOADING SCOPE: #{scope.inspect}"
+      load_file_or_directory(scope)
     end
 
     # # a "target" is a test file or directory containing test files
@@ -116,7 +113,7 @@ module Bork
     #
     def rvm_contexts
       @rvm_contexts ||= begin
-        rvm_paths = File.join("**", ".ruby-version")
+        rvm_paths = File.join(scope, "**", ".ruby-version")
         files = Dir.glob(rvm_paths).map{|p| File.realdirpath(p).sub('.ruby-version', '')}
         files.sort{|a,b| b.length <=> a.length }
       end

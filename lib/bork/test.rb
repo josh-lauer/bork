@@ -15,15 +15,21 @@ module Bork
       reset
       puts "Running test: #{path}"
       puts "Follow Here: #{File.join(job_folder, 'all.log')}"
-      runner = Runner.new
       runner.run(command, job_folder)
       status
     end
 
+    def runner
+      @runner ||= Runner.new
+    end
+
     # The shell command to run this test, whose output we want captured and parsed.
     def command
-      command = ['ruby', path, '--use-color=true']
-      command.unshift(*['rvm', 'in', rvm_context, 'do']) if rvm_context
+      [*context_prefix, 'ruby', path, '--use-color=true']
+    end
+
+    def context_prefix
+      rvm_context ? ['rvm', 'in', rvm_context, 'do'] : []
     end
 
     # The test's status.

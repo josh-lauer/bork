@@ -1,4 +1,5 @@
 require 'ostruct'
+require 'pathname'
 
 module Bork
   class Console
@@ -24,7 +25,8 @@ module Bork
 
         puts "Starting session..."
         puts "Hint: call 'help'"
-        REPL.start(binding)
+        # REPL.start(binding)
+        REPL.start(Bork::Commands.command_binding)
       end
     end
 
@@ -49,12 +51,15 @@ module Bork
     end
 
     def session
-      puts "STARTING SESSION FOR #{@options.scope}"
-      @session ||= Session.new('default', @options.scope)
+      @session ||= Session.new('default', options.scope)
     end
 
     def tests
       session.tests
+    end
+
+    def list
+      puts tests.map { |t| t.path[Pathname.new(options.scope).realpath.to_s.length+1..-1] }
     end
   end
 end

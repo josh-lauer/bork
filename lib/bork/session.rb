@@ -57,9 +57,10 @@ module Bork
       File.join(Config.sessions_root, descriptor)
     end
 
-    # empty the session folder
+    # empty the session folder, flush cached test objects
     def reset
       FileUtils.rm_rf(File.join(root, '*'))
+      @tests = nil
     end
 
     # delete the session folder
