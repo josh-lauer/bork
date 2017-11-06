@@ -3,12 +3,6 @@
 $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib')))
 
 require 'bork'
-
-puts Bork.constants
-puts Bork::VERSION
-puts Bork::Parser.inspect
-puts "butt"
-
 require 'optparse'
 
 options = {}
@@ -27,8 +21,9 @@ end.parse!
 puts "FLAGS: " + options.inspect
 
 options.tap do |opts|
+  puts "ARGV: #{ARGV.inspect}"
   # capture additional arguements into options hash
-  # opts[:example] = ARGV
+  opts[:scope] = ARGV[0]
 end
 
 puts "OPTS: " + options.inspect

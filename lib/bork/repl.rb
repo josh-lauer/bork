@@ -5,7 +5,7 @@ module Bork
   # pry has a major bug that makes it impossible to use in this context
   # (basically threading within a Timeout block blows up)
   module REPL
-    def self.start_session(binding)
+    def self.start(binding)
       unless @__initialized
         args = ARGV
         ARGV.replace(ARGV.dup)
