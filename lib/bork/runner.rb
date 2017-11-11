@@ -23,10 +23,11 @@ module Bork
       # empty the job dir before running
       FileUtils.rm_f Dir.glob(File.join(job_dir, '*'))
 
+      # the output files for this job
       stderr_log = File.join(job_dir, 'stderr.log')
       stdout_log = File.join(job_dir, 'stdout.log')
       all_log    = File.join(job_dir, 'all.log')
-      status_log = File.join(job_dir, 'status')
+      exit_code  = File.join(job_dir, 'exit_code')
 
       command = "((#{[*command].flatten.compact.join(' ')} | tee #{stdout_log}) 3>&1 1>&2 2>&3 | tee #{stderr_log}) 2>&1 | tee #{all_log}"
 
@@ -37,7 +38,7 @@ module Bork
           # run the command, record the exit status, return true if 0, else false
           options.echo ? system(command) : `#{command}`
           $?.exitstatus.tap do |status|
-            File.open(status_log, 'w') { |f| f.write(status) }
+            File.open(exit_code, 'w') { |f| f.write(status) }
           end == 0
         end
       rescue Timeout::Error
