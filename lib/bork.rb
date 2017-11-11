@@ -42,4 +42,7 @@ module Bork
   # Contains commands accessible in the bork shell, serves as an execution
   #   context, the "self" of a console session.
   autoload :Context, 'bork/context'
+
+  # produces display text given a test
+  autoload :Formatter, 'bork/formatter'
 end

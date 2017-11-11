@@ -18,7 +18,7 @@ module Bork
     # class methods
     class << self
       extend Forwardable
-      def_delegators :current, :root, :reset
+      def_delegators :current, :root, :reset, :scope
 
       def current
         @current ||= self.new
