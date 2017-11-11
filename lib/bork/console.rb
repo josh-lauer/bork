@@ -10,7 +10,7 @@ module Bork
     #   will be tracked and run.
     def initialize(_options = {})
       @options = OpenStruct.new(_options)
-      @context = Context.new
+      @context = Context.new(@options)
       puts "Bork::Console OPTIONS: #{options.inspect}"
     end
 
@@ -26,41 +26,8 @@ module Bork
 
         puts "Starting session..."
         puts "Hint: call 'help'"
-        # REPL.start(binding)
-        REPL.start(context.binding)
+        REPL.start(context.get_binding)
       end
-    end
-
-    # run the tests
-    def run(arg = nil)
-      # run the tests
-      puts "running the tests!"
-      tests = []
-      @__bork_interrupt = false
-
-      tests.each do |test|
-        break if @__bork_interrupt
-        test.run
-      end
-
-      puts "done running the tests!"
-    end
-
-    def help
-      puts "some help text"
-      puts "#{options.inspect}"
-    end
-
-    def session
-      @session ||= Session.new('default', options.scope)
-    end
-
-    def tests
-      session.tests
-    end
-
-    def list
-      puts tests.map { |t| t.path[Pathname.new(options.scope).realpath.to_s.length+1..-1] }
     end
   end
 end
