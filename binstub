@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+which bork || curl https://raw.githubusercontent.com/josh-lauer/bork/master/install | bash -s
+
+BORK_PWD=`pwd`
+cd
+cd .bork/bork
+rvm use ruby-2.4.1@bork
+bin/bork $BORK_PWD
