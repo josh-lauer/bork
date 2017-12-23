@@ -6,4 +6,4 @@ BORK_PWD=`pwd`
 cd
 cd .bork/bork
 rvm use ruby-2.4.1@bork
-.bork/bork/bin/bork -c $BORK_PWD
+~/.bork/bork/bin/bork -c $BORK_PWD
