@@ -17,6 +17,10 @@ OptionParser.new do |opts|
     options[:session] = value
   end
 
+  opts.on("-c", "--context", "Specify a folder to search") do |value|
+    options[:scope] = value
+  end
+
   # opts.on("-t", "--timeout", "Set test file timeout in seconds [Default #{Testy::DEFAULT_OPTIONS[:timeout]}]") do |value|
   #   options[:timeout] = value
   # end
@@ -26,8 +30,7 @@ puts "FLAGS: " + options.inspect
 
 options.tap do |opts|
   puts "ARGV: #{ARGV.inspect}"
-  # capture additional arguements into options hash
-  opts[:scope] = ARGV[0]
+  # capture additional arguments into options hash
 end
 
 puts "OPTS: " + options.inspect
