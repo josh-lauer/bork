@@ -13,6 +13,7 @@ else
 fi
 
 cd && mkdir .bork && cd .bork
+rm -rf ~/.bork/bork
 git clone https://github.com/josh-lauer/bork.git
 cd bork
 rvm use ruby-2.4.1@bork
