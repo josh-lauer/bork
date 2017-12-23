@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-which bork || curl https://raw.githubusercontent.com/josh-lauer/bork/master/install | bash -s
+which bork || curl https://raw.githubusercontent.com/josh-lauer/bork/master/install?cache_bust=`uuidgen` | bash -s
 
 BORK_PWD=`pwd`
 cd

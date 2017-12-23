@@ -17,6 +17,6 @@ git clone https://github.com/josh-lauer/bork.git
 cd bork
 rvm use ruby-2.4.1@bork
 
-curl https://raw.githubusercontent.com/josh-lauer/bork/master/binstub > /usr/local/bin/bork
+curl https://raw.githubusercontent.com/josh-lauer/bork/master/binstub?foo=`uuidgen` > /usr/local/bin/bork
 chmod +x /usr/local/bin/bork
 echo "Bork Installed."
