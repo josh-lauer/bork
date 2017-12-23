@@ -10,7 +10,11 @@ OptionParser.new do |opts|
   opts.banner = "Usage: example.rb [options]"
 
   opts.on("-v", "--[no-]verbose", "Run verbosely") do |value|
-    options[:verbose] = value
+    options[:echo] = value
+  end
+
+  opts.on("-s", "--session", "Specify a session") do |value|
+    options[:session] = value
   end
 
   # opts.on("-t", "--timeout", "Set test file timeout in seconds [Default #{Testy::DEFAULT_OPTIONS[:timeout]}]") do |value|
@@ -28,6 +32,7 @@ end
 
 puts "OPTS: " + options.inspect
 
+# Bork::Session.set(options[:session] || 'default', options[:scope])
 console = Bork::Console.new(options)
 console.start
 

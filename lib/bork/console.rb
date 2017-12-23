@@ -20,11 +20,7 @@ module Bork
       else
         @__session_started = true
 
-        # allows the use of ctrl-c to bail out of a test to
-        puts "Trapping SIGINT..."
-        Signal.trap('SIGINT') { @__bork_interrupt = true }
-
-        puts "Starting session..."
+        puts "Starting session #{Session.descriptor}"
         puts "Hint: call 'help'"
         REPL.start(context.get_binding)
       end

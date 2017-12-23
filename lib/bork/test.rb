@@ -1,13 +1,14 @@
 require 'digest'
 require 'fileutils'
+require 'pathname'
 
 module Bork
   class Test
     attr_reader :path, :rvm_context
 
     def initialize(path, rvm_context = nil)
-      @path = File.expand_path(path)
-      @rvm_context = rvm_context
+      @path = Pathname.new(File.expand_path(path)).realpath.to_s
+      @rvm_context = Pathname.new(File.expand_path(rvm_context)).realpath.to_s
     end
 
     # Run the test, generating artifacts in the job_folder, return Status
@@ -16,6 +17,7 @@ module Bork
       puts "Running test: #{path}"
       puts "Follow Here: #{File.join(job_folder, 'all.log')}"
       runner.run(command, job_folder)
+      puts Formatter.status_line(status)
       status
     end
 
@@ -39,7 +41,7 @@ module Bork
 
     # Parse the artifacts in the job folder, return a Status, memoize result
     def check_status
-      @status = parser.parse(job_folder)
+      @status = parser.parse
     end
 
     # The folder containing all of the current job's artifacts
@@ -60,7 +62,7 @@ module Bork
 
     # The parser analyzes test artifacts to generate a Status
     def parser
-      @parser ||= parser_klass.new
+      @parser ||= parser_klass.new(job_folder)
     end
 
     # @todo make this configurable

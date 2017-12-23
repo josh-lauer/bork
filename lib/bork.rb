@@ -45,4 +45,6 @@ module Bork
 
   # produces display text given a test
   autoload :Formatter, 'bork/formatter'
+
+  autoload :Log, 'bork/log'
 end

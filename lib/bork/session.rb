@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'forwardable'
+require 'pathname'
 
 module Bork
   # An attempt to run a collection of Tests.
@@ -11,22 +12,22 @@ module Bork
 
     def initialize(descriptor = 'default', scope = Dir.pwd)
       @descriptor = descriptor.to_s
-      @scope = scope
+      @scope = Pathname.new(File.expand_path(scope)).realpath.to_s
       create_folder
     end
 
     # class methods
     class << self
       extend Forwardable
-      def_delegators :current, :root, :reset, :scope
+      def_delegators :current, :root, :reset, :scope, :descriptor
 
       def current
         @current ||= self.new
       end
 
-      # set the current session by name
-      def set(session_name)
-        @current = self.new(session_name)
+      # set the current session by name and scope
+      def set(descriptor, scope)
+        @current = self.new(descriptor, scope)
       end
 
       # list all session names

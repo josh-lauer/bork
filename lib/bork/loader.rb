@@ -45,14 +45,12 @@ module Bork
     # end
 
     def load_file_or_directory(target)
-      puts "LOADING FILE OR DIRECTORY: #{target.inspect}"
       load_directory(target) || load_file(target) || (raise "File or dir not found #{target.inspect}")
     end
 
     # returns falsy only if it can't be loaded
     def load_file(target)
       if File.exist?(target) && !Dir.exist?(target) && load_test?(target)
-        puts "LOADING FILE: #{target.inspect}"
         # add a single test if it is not already loaded
         test_files |= [ File.realdirpath(target) ]
       end
@@ -62,7 +60,6 @@ module Bork
     # returns falsy only if it can't be added
     def load_directory(target)
       if Dir.exist?(target)
-        puts "LOADING DIRECTORY: #{target.inspect}"
         glob_pattern = File.join(target, "**", "*_test.rb")
         matches = Dir.glob(glob_pattern)
         tests_to_load = matches.select { |test| load_test?(test) }

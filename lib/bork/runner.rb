@@ -12,10 +12,8 @@ module Bork
     # command - a shell command to run, or array of strings to be joined into a command
     # job_dir - a folder in which to write logs and status code
     # echo - a flag to turn on/off stdout echo to terminal, defaults to true
-    def run(command, job_dir, opts = {})
-      options = OpenStruct.new(Config.defaults.merge(opts))
-
-      puts "RUN OPTIONS: #{options.inspect}"
+    def run(command, job_dir)
+      options = Config.options
 
       # make the job dir if it doesn't exist
       FileUtils.mkdir_p(job_dir) unless Dir.exist?(job_dir)
@@ -30,8 +28,6 @@ module Bork
       exit_code  = File.join(job_dir, 'exit_code')
 
       command = "((#{[*command].flatten.compact.join(' ')} | tee #{stdout_log}) 3>&1 1>&2 2>&3 | tee #{stderr_log}) 2>&1 | tee #{all_log}"
-
-      puts "RUNNING COMMAND: #{command}"
 
       begin
         Timeout.timeout(options.timeout) do

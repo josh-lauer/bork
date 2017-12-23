@@ -1,3 +1,5 @@
+require 'ostruct'
+
 module Bork
   # for now this just uses hardcoded defaults
   module Config
@@ -5,7 +7,7 @@ module Bork
       # the folder containing all of this user's bork sessions and config
       #   creates it if it doesn't already exist
       def bork_root
-        @session_root ||= File.join(Dir.home, '.bork').tap do |root|
+        @bork_root ||= File.join(Dir.home, '.bork').tap do |root|
           unless Dir.exist?(root)
             FileUtils.mkdir_p(root)
             FileUtils.mkdir_p(sessions_root)
@@ -17,8 +19,20 @@ module Bork
         File.join(bork_root, 'sessions')
       end
 
-      def[](key)
-        defaults[key]
+      def [](key)
+        options[key]
+      end
+
+      def []=(key, value)
+        options[key] = value
+      end
+
+      def delete(key)
+        options.delete_field(key)
+      end
+
+      def options
+        @options ||= OpenStruct.new(defaults)
       end
 
       def defaults
@@ -26,6 +40,20 @@ module Bork
           timeout: 30*60,  # half an hour per file max
           echo: false      # test output displayed
         }
+      end
+
+      def reset
+        @options = nil
+      end
+
+      # save options inside the session
+      def save
+
+      end
+
+      # save options from the session
+      def load
+
       end
     end
   end
