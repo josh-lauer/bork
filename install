@@ -14,6 +14,7 @@ fi
 
 mkdir ~/.bork && cd ~/.bork
 rm -rf ~/.bork/bork && git clone https://github.com/josh-lauer/bork.git ~/.bork/bork
+command rvm install ruby-2.4.1
 cd ~/.bork/bork
 rvm use ruby-2.4.1@bork
 gem install bundler
