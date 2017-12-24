@@ -1,9 +1,13 @@
 require 'digest'
 require 'fileutils'
 require 'pathname'
+require 'forwardable'
 
 module Bork
   class Test
+    include Metadata::Persistence
+    attr_persister :disabled
+
     attr_reader :path, :rvm_context
 
     def initialize(path, rvm_context = nil)
@@ -13,12 +17,16 @@ module Bork
 
     # Run the test, generating artifacts in the job_folder, return Status
     def run
-      reset
-      puts "Running test: #{path}"
-      puts "Follow Here: #{File.join(job_folder, 'all.log')}"
-      runner.run(command, job_folder)
-      puts Formatter.status_line(status)
-      status
+      if enabled?
+        reset
+        puts "Running test: #{path}"
+        puts "Follow Here: #{File.join(job_folder, 'all.log')}"
+        runner.run(command, job_folder)
+        puts Formatter.status_line(status)
+        status
+      else
+        puts "Test disabled, skipping."
+      end
     end
 
     def runner
@@ -68,6 +76,22 @@ module Bork
     # @todo make this configurable
     def parser_klass
       Parser
+    end
+
+    def enabled?
+      !disabled
+    end
+
+    def disabled?
+      !!disabled
+    end
+
+    def disable
+      self.disabled = true
+    end
+
+    def enable
+      self.disabled = false
     end
   end
 end

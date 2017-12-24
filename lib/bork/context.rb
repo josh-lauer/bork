@@ -14,9 +14,24 @@ module Bork
       binding
     end
 
-    # run the tests, by default all of them
+    def method_missing(method_name, *args)
+      test_candidates = select_tests(method_name)
+      if test_candidates.empty?
+        puts "Error or no tests matching #{method_name.inspect}, calling #super"
+        super
+      else
+        # allow chaining like a modifier
+        if args.first && args.first.is_a?(Array)
+          args.first.select { |t| t.file_path =~ Regexp.new(method_name.to_s) }
+        else
+          test_candidates
+        end
+      end
+    end
+
+    # run the tests, by default all enabled tests (tests default to enabled)
     def run(arg = nil)
-      selected_tests = resolve_tests(arg)
+      selected_tests = resolve_tests(arg).select(&:enabled?)
       puts "RUNNING TESTS:"
       list(selected_tests)
 
@@ -33,6 +48,20 @@ module Bork
       puts "done running the tests!"
     end
     alias_method :r, :run
+
+    def disable(arg)
+      selected_tests = resolve_tests(arg) unless arg.nil? # don't disable everything accidentally
+      puts "DISABLING TESTS:"
+      Formatter.display_tests(selected_tests)
+      selected_tests.each(&:disable)
+    end
+
+    def enable(arg)
+      selected_tests = resolve_tests(arg) unless arg.nil? # don't enable everything accidentally
+      puts "ENABLING TESTS:"
+      Formatter.display_tests(selected_tests)
+      selected_tests.each(&:enable)
+    end
 
     def verbose!
       Config[:echo] = true
@@ -60,7 +89,7 @@ module Bork
     end
 
     def tests
-      session.tests
+      session.tests #.reject { |t| excluded.include?(t.path) }
     end
 
     def list(arg = nil)
@@ -88,6 +117,14 @@ module Bork
     # - if a String, Symbol, or Regexp is passed, select tests by file_path
     def select_tests(regex = nil)
       regex && tests.select{|t| t.path =~ Regexp.new(regex.to_s)} || tests
+    end
+
+    def disabled(selected_tests = select_tests)
+      selected_tests.select(&:disabled?)
+    end
+
+    def enabled(selected_tests = select_tests)
+      selected_tests.select(&:enabled?)
     end
 
     # those tests which have not yet been run

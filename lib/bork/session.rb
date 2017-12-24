@@ -1,5 +1,4 @@
 require 'fileutils'
-require 'forwardable'
 require 'pathname'
 
 module Bork
@@ -14,12 +13,24 @@ module Bork
       @descriptor = descriptor.to_s
       @scope = Pathname.new(File.expand_path(scope)).realpath.to_s
       create_folder
+    rescue TypeError => e
+      puts "ERROR LOADING SCOPE: #{scope.inspect}"
+      raise e
     end
 
     # class methods
     class << self
-      extend Forwardable
-      def_delegators :current, :root, :reset, :scope, :descriptor
+      def method_missing(method_name, *args, &block)
+        if current.respond_to?(method_name)
+          current.send(method_name, *args, &block)
+        else
+          super
+        end
+      end
+
+      def respond_to_missing?(method_name)
+        current.respond_to?(method_name)
+      end
 
       def current
         @current ||= self.new
@@ -46,7 +57,7 @@ module Bork
     end # class methods
 
     def tests
-      @tests ||= loader.tests
+      loader.tests #.select(&:enabled)
     end
 
     def loader

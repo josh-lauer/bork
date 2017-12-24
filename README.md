@@ -4,23 +4,17 @@ Bork runs tests, and saves and parses the output.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'bork'
+Do this:
 ```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install bork
+curl https://goo.gl/26rCNF | bash -s
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+Go to a folder with some files that end in "test.rb" somewhere in it, and
+```
+bork
+```
 
 ## Development
 

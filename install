@@ -12,9 +12,9 @@ else
   exit 1
 fi
 
-echo "INSTALLING RUBY"
+echo "Installing ruby-2.4.1 with rvm"
 rvm install "ruby-2.4.1"
-echo "DONE INSTALLING RUBY"
+echo "Creating bork dir"
 mkdir ~/.bork && cd ~/.bork
 rm -rf ~/.bork/bork && git clone https://github.com/josh-lauer/bork.git ~/.bork/bork
 echo "ABOUT TO CD IN"
@@ -26,6 +26,6 @@ gem install bundler
 bundle install
 
 echo "Installing binstub."
-curl https://raw.githubusercontent.com/josh-lauer/bork/master/binstub?foo=`uuidgen` > /usr/local/bin/bork
+curl https://raw.githubusercontent.com/josh-lauer/bork/master/binstub?`uuidgen` > /usr/local/bin/bork
 chmod +x /usr/local/bin/bork
 echo "Bork Installed."

@@ -9,7 +9,7 @@ module Bork
     def parse
       status = Status.new
 
-      if Dir.exist?(job_dir)
+      if Dir.exist?(job_dir) && File.exist?(all_log)
         line = status_line
         if line
           status.attempted = true
@@ -36,7 +36,7 @@ module Bork
     end
 
     def output_lines
-      IO.readlines(File.join(job_dir, 'all.log'))
+      IO.readlines(all_log)
     end
 
     def status_line_regex
@@ -50,6 +50,10 @@ module Bork
 
     def parse_result_line(line)
       Hash[line.split(',').map { |pair| pair.strip.split.reverse }] #.reject { |e| e[1] == "0" }]
+    end
+
+    def all_log
+      File.join(job_dir, 'all.log')
     end
   end
 end

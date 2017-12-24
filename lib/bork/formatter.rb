@@ -5,25 +5,37 @@ module Bork
         max_test_index = (tests.length - 1).to_s.length
         tests.flatten.each_with_index do |test, i|
           display_index = "[#{i.to_s.rjust(max_test_index)}]"
-          path = colorized_test_path(test.path[Session.scope.length+1..-1], test.status)
+
+          path = case test
+          when Test
+            colorized_test_path(test.path[Session.scope.length+1..-1], test)
+          when String
+            colorized_test_path(test[Session.scope.length+1..-1])
+          else
+            raise "NOT OK NOT OK"
+          end
+
           puts "#{display_index} #{path}"
         end
         true
       end
       alias_method :display_test, :display_tests
 
-      def colorized_test_path(path, status)
+      def colorized_test_path(path, status = nil)
         colorize(path, status_color(status))
       end
 
-      def status_color(status)
+      # defaults to dark gray if falsy
+      def status_color(test = nil)
         case
-        when status.unattempted?                  then :dark_gray
-        when status.crashed?                      then :magenta
-        when status.passing?                      then :green
-        when status.failing_with_errors?          then :yellow
-        when status.failing?                      then :red
-        else                                         :white
+        when test.nil?                        then :dark_gray
+        when test.disabled?                   then :blue
+        when test.status.unattempted?         then :dark_gray
+        when test.status.crashed?             then :magenta
+        when test.status.passing?             then :green
+        when test.status.failing_with_errors? then :yellow
+        when test.status.failing?             then :red
+        else                                       :white
         end
       end
 

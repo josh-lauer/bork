@@ -46,5 +46,8 @@ module Bork
   # produces display text given a test
   autoload :Formatter, 'bork/formatter'
 
+  # stored information about particular tests
+  autoload :Metadata, 'bork/metadata'
+
   autoload :Log, 'bork/log'
 end
