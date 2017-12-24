@@ -12,14 +12,20 @@ else
   exit 1
 fi
 
+echo "INSTALLING RUBY"
 rvm install "ruby-2.4.1"
+echo "DONE INSTALLING RUBY"
 mkdir ~/.bork && cd ~/.bork
 rm -rf ~/.bork/bork && git clone https://github.com/josh-lauer/bork.git ~/.bork/bork
+echo "ABOUT TO CD IN"
 cd ~/.bork/bork
+echo "ABOUT RVM USE"
 rvm use ruby-2.4.1@bork
+echo "INSTALLING BUNDLER"
 gem install bundler
 bundle install
 
+echo "Installing binstub."
 curl https://raw.githubusercontent.com/josh-lauer/bork/master/binstub?foo=`uuidgen` > /usr/local/bin/bork
 chmod +x /usr/local/bin/bork
 echo "Bork Installed."
