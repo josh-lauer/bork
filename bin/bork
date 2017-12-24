@@ -17,7 +17,7 @@ OptionParser.new do |opts|
     options[:session] = value
   end
 
-  opts.on("-c", "--context", "Specify a folder to search") do |value|
+  opts.on("-cCONTEXT", "--context=CONTEXT", "Specify a folder to search") do |value|
     options[:scope] = value
   end
 
