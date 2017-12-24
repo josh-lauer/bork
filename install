@@ -12,12 +12,9 @@ else
   exit 1
 fi
 
-cd && mkdir .bork && cd .bork
-ls -la ~/.bork
-echo "ABOUT TO CLONE"
+mkdir ~/.bork && cd ~/.bork
 rm -rf ~/.bork/bork && git clone https://github.com/josh-lauer/bork.git ~/.bork/bork
-echo "JUST CLONED"
-cd bork
+cd ~/.bork/bork
 rvm use ruby-2.4.1@bork
 gem install bundler
 bundle install
