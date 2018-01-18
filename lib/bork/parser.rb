@@ -27,8 +27,13 @@ module Bork
       status
     end
 
+    # Return the first line in the test output that matches the first of the status_line_regexes
+    #  returns nil if none is found
     def raw_status_line
-      output_lines.detect { |line| clean_line(line) =~ status_line_regex }
+      status_line_regexes.detect do |status_line_regex|
+        status_line = output_lines.detect { |line| clean_line(line) =~ status_line_regex }
+        break status_line if status_line
+      end
     end
 
     def status_line
@@ -39,8 +44,11 @@ module Bork
       IO.readlines(all_log)
     end
 
-    def status_line_regex
-      /^.*[0-9]+\stests.*assertions.*failures.*errors.*pendings.*omissions.*notifications.*$/
+    def status_line_regexes
+      [
+        /^.*[0-9]+\stests.*assertions.*failures.*errors.*pendings.*omissions.*notifications.*$/, # Test::Unit
+        /^.*[0-9]+\stests.*assertions.*failures.*errors.*skips.*$/                               # Minitest
+      ]
     end
 
     def clean_line(line)

@@ -39,10 +39,10 @@ module Bork
         end
       end
 
-      def status_line(status)
-        raw_result = status.raw_result
+      def status_line(test)
+        raw_result = test.status.raw_result
         text = raw_result && "STATUS: " + raw_result.map { |p| p.reverse.join(' ')}.join(', ') || "Not completed - there was an error"
-        colorize(text, status_color(status))
+        colorize(text, status_color(test))
       end
 
       def color_print(str, *colors)

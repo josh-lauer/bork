@@ -6,7 +6,7 @@ Bork runs tests, and saves and parses the output.
 
 Do this:
 ```
-curl https://goo.gl/26rCNF | bash -s
+curl https://raw.githubusercontent.com/josh-lauer/bork/master/install | bash -s
 ```
 
 ## Usage

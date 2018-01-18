@@ -1,5 +1,3 @@
-require 'yaml'
-
 module Bork
   module Metadata
     autoload :Persistence, 'bork/metadata/persistence'

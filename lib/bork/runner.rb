@@ -21,56 +21,69 @@ module Bork
       # empty the job dir before running
       FileUtils.rm_f Dir.glob(File.join(job_dir, '*'))
 
-      # the output files for this job
-      stderr_log = File.join(job_dir, 'stderr.log')
-      stdout_log = File.join(job_dir, 'stdout.log')
-      all_log    = File.join(job_dir, 'all.log')
-      exit_code  = File.join(job_dir, 'exit_code')
+      # # the output files for this job
+      # stderr_log = File.join(job_dir, 'stderr.log')
+      # stdout_log = File.join(job_dir, 'stdout.log')
+      # all_log    = File.join(job_dir, 'all.log')
+      # exit_code  = File.join(job_dir, 'exit_code')
 
-      command = "((#{[*command].flatten.compact.join(' ')} | tee #{stdout_log}) 3>&1 1>&2 2>&3 | tee #{stderr_log}) 2>&1 | tee #{all_log}"
+      # command = "((#{[*command].flatten.compact.join(' ')} | tee #{stdout_log}) 3>&1 1>&2 2>&3 | tee #{stderr_log}) 2>&1 | tee #{all_log}"
 
-      begin
-        Timeout.timeout(options.timeout) do
-          # run the command, record the exit status, return true if 0, else false
-          options.echo ? system(command) : `#{command}`
-          $?.exitstatus.tap do |status|
-            File.open(exit_code, 'w') { |f| f.write(status) }
-          end == 0
-        end
-      rescue Timeout::Error
-        puts "RUNNER ABORTED, TIMED OUT! (> #{options.timeout}s elapsed)"
-        # Process.kill("KILL", thread.pid)
-      end
-
-      # elapsed = Benchmark.realtime do
-      #   Open3.popen3(*command) do |stdin, stdout, stderr, thread|
-      #     begin
-      #       Timeout.timeout(options.timeout) do
-      #         threads = []
-      #         threads << Thread.new do
-      #           while line = stdout.gets do
-      #             puts line if options.echo
-      #           end
-      #         end
-      #         threads << Thread.new do
-      #           while line = stderr.gets do
-      #             puts line if options.echo
-      #           end
-      #         end
-      #         # threads << Thread.new do
-      #         #   while line = STDIN.read(64)  # read output of the upstream command
-      #         #     puts "PASSING THROUGH INPUT: #{line.inspect}"
-      #         #     stdin.write(line)          # manually pipe it to the ffmpeg command
-      #         #   end
-      #         # end
-      #         threads.each(&:join)
-      #       end
-      #     rescue Timeout::Error
-      #       puts "RUNNER ABORTED, TIMED OUT! (> #{options.timeout}s elapsed)"
-      #       Process.kill("KILL", thread.pid)
-      #     end
+      # begin
+      #   Timeout.timeout(options.timeout) do
+      #     # run the command, record the exit status, return true if 0, else false
+      #     options.echo ? system(command) : `#{command}`
+      #     $?.exitstatus.tap do |status|
+      #       File.open(exit_code, 'w') { |f| f.write(status) }
+      #     end == 0
       #   end
+      # rescue Timeout::Error
+      #   puts "RUNNER ABORTED, TIMED OUT! (> #{options.timeout}s elapsed)"
+      #   # Process.kill("KILL", thread.pid)
       # end
+
+      # the output files for this job
+      stderr_log = File.open(File.join(job_dir, 'stderr.log'), 'w')
+      stdout_log = File.open(File.join(job_dir, 'stdout.log'), 'w')
+      all_log    = File.open(File.join(job_dir, 'all.log'), 'w')
+      exit_code  = File.open(File.join(job_dir, 'exit_code'), 'w')
+
+      elapsed = Benchmark.realtime do
+        Open3.popen3(*command) do |stdin, stdout, stderr, wait_thr|
+          begin
+            Timeout.timeout(options.timeout) do
+              threads = []
+              threads << Thread.new do
+                while line = stdout.gets do
+                  puts line if options.echo
+                  stdout_log.write(line)
+                  all_log.write(line)
+                end
+              end
+              threads << Thread.new do
+                while line = stderr.gets do
+                  puts line if options.echo
+                  stderr_log.write(line)
+                  all_log.write(line)
+                end
+              end
+              # threads << Thread.new do
+              #   while line = STDIN.read(64)  # read output of the upstream command
+              #     puts "PASSING THROUGH INPUT: #{line.inspect}"
+              #     stdin.write(line)          # manually pipe it to the ffmpeg command
+              #   end
+              # end
+              exit_code.write(wait_thr.value)
+              threads.each(&:join)
+            end
+          rescue Timeout::Error
+            puts "RUNNER ABORTED, TIMED OUT! (> #{options.timeout}s elapsed)"
+            Process.kill("KILL", wait_thr.pid)
+          end
+        end
+      end
+    ensure
+      [stderr_log, stdout_log, all_log, exit_code].each { |file| file.close unless file.nil? }
     end
   end
 end

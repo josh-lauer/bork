@@ -6,7 +6,7 @@ require 'forwardable'
 module Bork
   class Test
     include Metadata::Persistence
-    attr_persister :disabled
+    attr_persister :disabled, root: :job_folder
 
     attr_reader :path, :rvm_context
 
@@ -22,7 +22,7 @@ module Bork
         puts "Running test: #{path}"
         puts "Follow Here: #{File.join(job_folder, 'all.log')}"
         runner.run(command, job_folder)
-        puts Formatter.status_line(status)
+        puts Formatter.status_line(self)
         status
       else
         puts "Test disabled, skipping."
@@ -35,7 +35,8 @@ module Bork
 
     # The shell command to run this test, whose output we want captured and parsed.
     def command
-      [*context_prefix, 'ruby', path, '--use-color=true']
+      # [*context_prefix, 'ruby', path, '--use-color=true'] # minitest blows up here
+      [*context_prefix, 'ruby', path]
     end
 
     def context_prefix
@@ -71,6 +72,10 @@ module Bork
     # The parser analyzes test artifacts to generate a Status
     def parser
       @parser ||= parser_klass.new(job_folder)
+    end
+
+    def all_log
+      IO.readlines(File.join(job_folder, 'all.log'))
     end
 
     # @todo make this configurable

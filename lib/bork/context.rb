@@ -71,13 +71,13 @@ module Bork
       Config[:echo] = false
     end
 
-    # # show the output of selected tests, or all output from all tests by default
-    # def show(arg = nil)
-    #   selected_tests = resolve_tests(arg)
-    #   selected_tests.map(&:output).each { |line| puts line }
-    #   nil
-    # end
-    # alias_method :s, :show
+    # show the output of selected tests, or all output from all tests by default
+    def show(arg = nil)
+      selected_tests = resolve_tests(arg)
+      selected_tests.map(&:all_log).each { |log| puts log }
+      nil
+    end
+    alias_method :s, :show
 
     def help
       puts "some help text"

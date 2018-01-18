@@ -14,9 +14,12 @@ module Bork
       end
 
       def []=(k,v)
-        store[k] = v
+        if v
+          store[k] = v
+        else
+          store.delete(k)
+        end
         save
-        v
       end
 
       def load
@@ -26,11 +29,14 @@ module Bork
       end
 
       def save
-        # don't create a file if there's no metadata
-        if store.any?
+        # if there's metadata, save the file
+        if store.select { |_,v| v }.any?
           # make the job dir if it doesn't exist, then save metadata file
           FileUtils.mkdir_p(job_folder) unless Dir.exist?(job_folder)
-          File.write(metadata_file, store.to_yaml)
+          File.write(metadata_file, store.select { |_,v| v }.to_yaml)
+        else
+          # if the store is empty, delete the metadata file if one exists
+          File.delete(metadata_file) if File.exist?(metadata_file)
         end
       end
 

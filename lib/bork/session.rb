@@ -57,7 +57,7 @@ module Bork
     end # class methods
 
     def tests
-      loader.tests #.select(&:enabled)
+      @tests ||= loader.tests #.select(&:enabled)
     end
 
     def loader
