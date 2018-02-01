@@ -8,6 +8,7 @@ module Bork
   # - has a state and is resettable
   class Session
     attr_reader :descriptor, :scope
+    attr_writer :current
 
     def initialize(descriptor = 'default', scope = Dir.pwd)
       @descriptor = descriptor.to_s
@@ -32,13 +33,14 @@ module Bork
         current.respond_to?(method_name)
       end
 
+      # the session currently being used
       def current
         @current ||= self.new
       end
 
       # set the current session by name and scope
       def set(descriptor, scope)
-        @current = self.new(descriptor, scope)
+        self.current = self.new(descriptor, scope)
       end
 
       # list all session names
@@ -57,7 +59,7 @@ module Bork
     end # class methods
 
     def tests
-      @tests ||= loader.tests #.select(&:enabled)
+      @tests ||= loader.tests
     end
 
     def loader
@@ -71,7 +73,7 @@ module Bork
 
     # empty the session folder, flush cached test objects
     def reset
-      FileUtils.rm_rf(File.join(root, '*'))
+      FileUtils.rm_rf(Dir.glob(File.join(root, '*')))
       @tests = nil
     end
 

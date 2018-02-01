@@ -22,6 +22,7 @@ module Bork
         save
       end
 
+      # @return [Hash, nil] hash if metadata is persisted, else nil
       def load
         if File.exist?(metadata_file)
           @metadata_store = YAML.load_file(metadata_file)
@@ -46,6 +47,7 @@ module Bork
         File.join(job_folder, 'metadata.yml')
       end
 
+      # loads metadata or initializes new empty store
       def store
         @metadata_store ||= load || {}
       end
