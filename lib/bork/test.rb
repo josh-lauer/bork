@@ -12,7 +12,9 @@ module Bork
 
     def initialize(path, rvm_context = nil)
       @path = Pathname.new(File.expand_path(path)).realpath.to_s
-      @rvm_context = Pathname.new(File.expand_path(rvm_context)).realpath.to_s
+      @rvm_context = if rvm_context
+        Pathname.new(File.expand_path(rvm_context)).realpath.to_s
+      end
     end
 
     # Run the test, generating artifacts in the job_folder, return Status
