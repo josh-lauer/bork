@@ -37,8 +37,10 @@ module Bork
 
       def defaults
         {
-          timeout: 30*60,  # half an hour per file max
-          echo: false      # test output displayed
+          timeout: 30*60,     # half an hour per file max
+          echo: false,        # test output displayed
+          context: Dir.pwd,   # wherever bork was initially run
+          session: 'default',
         }
       end
 

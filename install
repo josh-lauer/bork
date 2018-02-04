@@ -15,16 +15,20 @@ fi
 echo "Installing ruby-2.4.1 with rvm"
 rvm install "ruby-2.4.1"
 
-echo "Creating bork dir"
+echo "Creating bork dir ~/.bork."
 mkdir ~/.bork && cd ~/.bork
-rm -rf ~/.bork/bork && git clone https://github.com/josh-lauer/bork.git ~/.bork/bork
-cd ~/.bork/bork
 
-echo "INSTALLING BUNDLER"
+echo "Installing bork gem to ~/.bork/bork."
+rm -rf ~/.bork/bork && git clone https://github.com/josh-lauer/bork.git ~/.bork/bork
+
+echo "Installing Bundler."
+cd ~/.bork/bork
 gem install bundler
+
+echo "Bundling."
 bundle install
 
-echo "Installing binstub."
+echo "Installing binstub to /usr/local/bin/bork."
 curl https://raw.githubusercontent.com/josh-lauer/bork/master/binstub?`uuidgen` > /usr/local/bin/bork
 chmod +x /usr/local/bin/bork
 echo "Bork Installed."

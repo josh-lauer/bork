@@ -9,7 +9,7 @@ module Bork
     #   the 'root' for this console session. Only tests within this directory
     #   will be tracked and run.
     def initialize(_options = {})
-      @options = OpenStruct.new(_options)
+      @options = OpenStruct.new(Config.options.merge(_options))
       @context = Context.new(@options)
       puts "Bork::Console OPTIONS: #{options.inspect}"
     end
@@ -20,7 +20,7 @@ module Bork
       else
         @__session_started = true
 
-        puts "Starting session #{Session.descriptor}"
+        puts "Starting bork session with options #{options.inspect}"
         puts "Hint: call 'help'"
         REPL.start(context.get_binding)
       end

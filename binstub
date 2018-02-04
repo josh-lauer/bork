@@ -1,8 +1,15 @@
 #!/usr/bin/env bash
 
+# install the latest bork if needed
 which bork || curl https://raw.githubusercontent.com/josh-lauer/bork/master/install?`uuidgen` | bash -s
 
-BORK_PWD=`pwd`
-cd ~/.bork/bork
+# Implement update here rather than in ./bin/bork (the bork command) for now.
+if [[ $1 = "update" ]]; then
+  echo "Updating Bork."
+  curl https://raw.githubusercontent.com/josh-lauer/bork/master/install?`uuidgen` | bash -s
+  exit
+fi
+
+# Run bork using the correct ruby & gemset, passing on args
 rvm use ruby-2.4.1@bork
-~/.bork/bork/bin/bork -c $BORK_PWD
+~/.bork/bork/bin/bork "$@"

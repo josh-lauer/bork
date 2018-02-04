@@ -39,8 +39,8 @@ module Bork
       end
 
       # set the current session by name and scope
-      def set(descriptor, scope)
-        self.current = self.new(descriptor, scope)
+      def set(*args)
+        self.current = self.new(*args)
       end
 
       # list all session names
@@ -63,6 +63,7 @@ module Bork
     end
 
     def loader
+      puts "LOADER SCOPE: #{scope.inspect}"
       @loader ||= Loader.new(scope)
     end
 
