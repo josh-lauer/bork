@@ -1,17 +1,27 @@
 # Bork
 
-Bork runs tests, and saves and parses the output.
+Bork attempts to run tests, saves the output separately by stream (stdout/stderr), parses the output. It allows filtering and selecting tests by path, run status (passing/erroring/failing/crashing/etc). Allows creation of testing "sessions", caches test output and results to disk. Allows tagging of tests within sessions with persistent metadata.
 
 ## Installation
 
-Do this:
+Bork requires a recent version of [RVM](https://rvm.io/).
+
 ```
 curl https://raw.githubusercontent.com/josh-lauer/bork/master/install | bash -s
 ```
 
+That's it. It might take a few minutes if it needs to install a ruby.
+
+Bork creates a directory at `~/.bork` to install the gem, save test output, metadata, and preferences. and installs an executable to `/usr/local/bin/bork`. To completely remove Bork:
+
+```
+rm -rf ~/.bork && rm /usr/local/bin/bork
+```
+
+
 ## Usage
 
-Go to a folder with some files that end in "test.rb" somewhere in it, and
+Go to a folder with some files that end in "test.rb" somewhere in it (at any search depth), and
 ```
 bork
 ```
