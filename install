@@ -26,7 +26,7 @@ cd ~/.bork/bork
 gem install bundler
 
 echo "Bundling."
-bundle install
+bundle install --no-binstubs
 
 echo "Installing binstub to /usr/local/bin/bork."
 curl https://raw.githubusercontent.com/josh-lauer/bork/master/binstub?`uuidgen` > /usr/local/bin/bork
