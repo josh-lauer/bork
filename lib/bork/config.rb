@@ -4,8 +4,8 @@ module Bork
   # for now this just uses hardcoded defaults
   module Config
     class << self
-      # the folder containing all of this user's bork sessions and config
-      #   creates it if it doesn't already exist
+      # the folder containing all of this user's bork sessions, config, test
+      #   output, metadata, etc. This creates it if it doesn't already exist.
       def bork_root
         @bork_root ||= File.join(Dir.home, '.bork').tap do |root|
           unless Dir.exist?(root)
@@ -15,6 +15,8 @@ module Bork
         end
       end
 
+      # the folder containing all of this user's bork sessions and config
+      #   creates it if it doesn't already exist
       def sessions_root
         File.join(bork_root, 'sessions')
       end
@@ -35,6 +37,20 @@ module Bork
         @options ||= OpenStruct.new(defaults)
       end
 
+      # @param opts [Hash] the options to be merged into the config
+      #
+      # @return [OpenStruct] the new options object with merge applied
+      def merge(opts)
+        OpenStruct.new(to_h.merge(opts))
+      end
+
+      # @param opts [Hash] the options to be merged into the config
+      #
+      # @return [OpenStruct] the new options object with merge applied
+      def merge!(opts)
+        @options = merge(opts)
+      end
+
       def defaults
         {
           timeout: 30*60,     # half an hour per file max
@@ -42,6 +58,10 @@ module Bork
           context: Dir.pwd,   # wherever bork was initially run
           session: 'default',
         }
+      end
+
+      def to_h
+        options.to_h
       end
 
       def reset

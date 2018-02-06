@@ -39,8 +39,8 @@ module Bork
       end
 
       # set the current session by name and scope
-      def set(*args)
-        self.current = self.new(*args)
+      def set(*args, &blk)
+        self.current = self.new(*args, &blk)
       end
 
       # list all session names

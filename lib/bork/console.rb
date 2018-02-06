@@ -9,7 +9,7 @@ module Bork
     #   the 'root' for this console session. Only tests within this directory
     #   will be tracked and run.
     def initialize(_options = {})
-      @options = OpenStruct.new(Config.options.merge(_options))
+      @options = Config.merge(_options)  # @options is an OpenStruct
       @context = Context.new(@options)
       puts "Bork::Console OPTIONS: #{options.inspect}"
     end

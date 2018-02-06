@@ -85,7 +85,7 @@ module Bork
     end
 
     def session
-      @session ||= Session.set(options.session || 'default', options.scope)
+      @session ||= Session.set(options.session || 'default', options.context)
     end
 
     def tests
