@@ -22,7 +22,7 @@ module Bork
       else
         # allow chaining like a modifier
         if args.first && args.first.is_a?(Array)
-          args.first.select { |t| t.file_path =~ Regexp.new(method_name.to_s) }
+          args.first.select { |t| t.path =~ Regexp.new(method_name.to_s) }
         else
           test_candidates
         end
