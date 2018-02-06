@@ -38,11 +38,17 @@ module Bork
     # The shell command to run this test, whose output we want captured and parsed.
     def command
       # [*context_prefix, 'ruby', path, '--use-color=true'] # minitest blows up here
-      [*context_prefix, 'ruby', path]
+      [*env, *rvm_context_prefix, 'ruby', path]
     end
 
-    def context_prefix
+    def rvm_context_prefix
       rvm_context ? ['rvm', 'in', rvm_context, 'do'] : []
+    end
+
+    def env
+      {
+        KOR_USE_CACHED_GEMS: 'true'
+      }.map{|*kv| kv.join('=')}
     end
 
     # The test's status.
