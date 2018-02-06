@@ -12,6 +12,9 @@ else
   exit 1
 fi
 
+echo "Purging gemset"
+rvm --force gemset delete ruby-2.4.1@bork
+
 echo "Installing ruby-2.4.1 with rvm"
 rvm install "ruby-2.4.1"
 
