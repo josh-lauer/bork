@@ -8,6 +8,15 @@ module Bork
     include Metadata::Persistence
     attr_persister :disabled, root: :job_folder
 
+    extend Forwardable
+    def_delegators :status, :unattempted?,
+                            :attempted?,
+                            :crashed?,
+                            :passing?,
+                            :completed?,
+                            :failing?,
+                            :has_errors?
+
     attr_reader :path, :rvm_context
 
     def initialize(path, rvm_context = nil)
