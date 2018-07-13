@@ -2,6 +2,10 @@
 
 Bork attempts to run tests, saves the output separately by stream (stdout/stderr), parses the output. It allows filtering and selecting tests by path, run status (passing/erroring/failing/crashing/etc). Allows creation of testing "sessions", caches test output and results to disk. Allows tagging of tests within sessions with persistent metadata.
 
+## Note
+
+Bork was made for a very specific use case, to be used by a specific team. It is mostly undocumented. If you aren't using RVM, are using a test environment other than MiniTest or Test::Unit, or have named your test files anything other than `*test.rb`, bork will not work for you without modification. Use at your own risk.
+
 ## Installation
 
 Bork requires a recent version of [RVM](https://rvm.io/).
@@ -18,19 +22,13 @@ Bork creates a directory at `~/.bork` to install the gem, save test output, meta
 rm -rf ~/.bork && rm /usr/local/bin/bork
 ```
 
-
 ## Usage
 
 Go to a folder with some files that end in "test.rb" somewhere in it (at any search depth), and
 ```
 bork
 ```
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+You will be dropped into a console session.
 
 ## Contributing
 
