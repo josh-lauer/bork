@@ -54,6 +54,8 @@ module Bork
     def clean_line(line)
       # remove escape codes and strips line
       line.gsub(/\e\[([;\d]+)?m/, '').strip
+    rescue ArgumentError => e
+      # this is to stop "invalid byte sequence in UTF-8" errors from crashing bork
     end
 
     def parse_result_line(line)
